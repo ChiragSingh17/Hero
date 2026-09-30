@@ -1,0 +1,403 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0e0f12;
+  --color-ink-2: #17181b;
+  --color-stage: #d7d7d3;
+  --color-stage-2: #c3c3bd;
+  --color-lime: #def54f;
+  --color-sky: #6ac9ff;
+  --color-trail: #45db7d;
+  --color-orange: #fa7328;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ---------------------------------------------------------------- reset-ish */
+
+* {
+  min-width: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-ink);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-section {
+    height: 100svh !important;
+  }
+}
+
+/* ------------------------------------------------------------- hero stage */
+
+.hero-stage {
+  --road-h: clamp(104px, 19vh, 214px);
+  --car-h: calc(var(--road-h) * 1.06);
+  --car-w: calc(var(--car-h) * 2.0444);
+  --card-w: clamp(132px, 15vw, 212px);
+  --card-h: clamp(94px, 12.5vh, 150px);
+  --mark-h: clamp(4px, 0.9vh, 8px);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+  background-color: var(--color-stage);
+  background-image: linear-gradient(180deg, #e0e0dc 0%, #d7d7d3 42%, #cacac4 100%);
+  isolation: isolate;
+}
+
+.hero-veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(
+      118% 74% at 50% 4%,
+      rgba(255, 255, 255, 0.72),
+      rgba(255, 255, 255, 0) 62%
+    ),
+    radial-gradient(
+      120% 100% at 50% 108%,
+      rgba(20, 20, 22, 0.22),
+      rgba(20, 20, 22, 0) 58%
+    );
+}
+
+.hero-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.2;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-inline: clamp(16px, 4vw, 56px);
+  padding-block: clamp(28px, 6vh, 72px) clamp(18px, 3vh, 44px);
+}
+
+/* --------------------------------------------------------------- headline */
+
+.headline {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: clamp(4px, 0.55vw, 13px);
+  margin: 0;
+  font-size: clamp(1.9rem, 8.4vw, 7rem);
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  color: #101012;
+}
+
+.hl {
+  display: inline-block;
+  perspective: 700px;
+  will-change: transform;
+}
+
+.hl__rise {
+  display: inline-block;
+  transform-origin: 50% 100%;
+}
+
+.hl__lit {
+  display: inline-block;
+  opacity: 0.16;
+  will-change: transform, opacity;
+}
+
+.hl__gap {
+  display: inline-block;
+  width: clamp(10px, 1.7vw, 36px);
+}
+
+/* -------------------------------------------------------------- stat cards */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, var(--card-w));
+  justify-content: center;
+  gap: clamp(10px, 1.5vw, 26px);
+  margin-top: clamp(22px, 4.2vh, 62px);
+}
+
+.stat {
+  position: relative;
+  width: var(--card-w);
+  height: var(--card-h);
+  overflow: hidden;
+  border-radius: clamp(12px, 1.1vw, 20px);
+  background-color: var(--color-ink-2);
+  color: var(--stat-off, #f6f7f2);
+  box-shadow:
+    0 22px 44px -26px rgba(0, 0, 0, 0.72),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+  transition: color 0.5s ease 0.1s;
+  will-change: transform, opacity;
+}
+
+.stat:nth-child(even) {
+  margin-top: clamp(8px, 2.2vh, 30px);
+}
+
+.stat[data-on="true"] {
+  color: var(--stat-on, #101012);
+}
+
+.stat__fill {
+  position: absolute;
+  inset: 0;
+  background-color: var(--stat-fill, #def54f);
+  transform: scaleY(0);
+  transform-origin: 50% 100%;
+  transition: transform 0.62s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.stat[data-on="true"] .stat__fill {
+  transform: scaleY(1);
+}
+
+.stat__inner {
+  position: relative;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  padding: clamp(11px, 1.05vw, 18px);
+  will-change: transform;
+}
+
+.stat__value {
+  margin: 0;
+  font-size: clamp(1.7rem, 3.2vw, 3rem);
+  font-weight: 700;
+  line-height: 0.94;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat__unit {
+  margin-left: 0.06em;
+  font-size: 0.56em;
+  font-weight: 700;
+}
+
+.stat__label {
+  margin: 0;
+  font-size: clamp(0.6rem, 0.74vw, 0.78rem);
+  line-height: 1.28;
+  letter-spacing: 0.005em;
+  opacity: 0.84;
+}
+
+/* ------------------------------------------------------------------- road */
+
+.road {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
+  width: 100%;
+  height: var(--road-h);
+  overflow: hidden;
+  background-image: linear-gradient(
+    180deg,
+    #26262a 0%,
+    #1b1b1e 24%,
+    #131315 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.6);
+}
+
+.road__inner {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 50%;
+}
+
+.road__marks {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 200%;
+  height: var(--mark-h);
+  margin-top: calc(var(--mark-h) / -2);
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0) calc(50% - 46px),
+    rgba(255, 255, 255, 0.13) calc(50% - 46px),
+    rgba(255, 255, 255, 0.13) calc(50% - 13px),
+    rgba(255, 255, 255, 0) calc(50% - 13px),
+    rgba(255, 255, 255, 0) 50%
+  );
+  will-change: transform;
+}
+
+/* Resting state is collapsed. The scroll tween's real start value is slightly
+   negative (the car centre is still left of the road), which is off-screen
+   anyway — so both readings look identical and nothing pops. */
+.trail {
+  position: absolute;
+  inset: 0;
+  transform: scaleX(0);
+  transform-origin: 0% 50%;
+  background-image: linear-gradient(
+    90deg,
+    rgba(69, 219, 125, 0) 0%,
+    rgba(69, 219, 125, 0.22) 34%,
+    rgba(69, 219, 125, 0.72) 82%,
+    rgba(120, 240, 165, 0.95) 100%
+  );
+  will-change: transform;
+}
+
+/* The car rests fully off the left edge. Declaring the start position in CSS
+   means the pre-animation state is identical to the scroll tween's from
+   value, so there is no jump on the first pixel of scroll. `--car-w` is
+   derived from the 736x360 viewBox aspect ratio of the artwork. */
+.car {
+  position: absolute;
+  left: calc(var(--car-w) * -1);
+  top: 50%;
+  width: var(--car-w);
+  height: var(--car-h);
+  margin-top: calc(var(--car-h) / -2);
+  will-change: transform;
+}
+
+/* -------------------------------------------------------------- scroll hint */
+
+.hero-foot {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: clamp(54px, 9vh, 96px);
+  background-image: linear-gradient(180deg, #131315 0%, #0e0f12 100%);
+  will-change: transform, opacity;
+}
+
+.hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-radius: 999px;
+  padding: 0.5rem 1.05rem 0.5rem 1.15rem;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #e9e9e4;
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  will-change: transform;
+}
+
+.hint__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background-color: var(--color-trail);
+  animation: hintPulse 1.9s ease-in-out infinite;
+}
+
+@keyframes hintPulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.75);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hint__dot {
+    animation: none;
+    opacity: 1;
+  }
+
+  .stat,
+  .stat__fill,
+  .hl,
+  .hl__rise,
+  .hl__lit,
+  .road__inner,
+  .road__marks,
+  .trail,
+  .car,
+  .hero-foot {
+    will-change: auto;
+  }
+}
+
+/* -------------------------------------------------------------- responsive */
+
+@media (max-width: 1080px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, var(--card-w));
+    gap: clamp(10px, 2vw, 20px);
+    margin-top: clamp(18px, 3.4vh, 44px);
+  }
+
+  .stat:nth-child(even) {
+    margin-top: 0;
+  }
+
+  .stat:nth-child(3),
+  .stat:nth-child(4) {
+    margin-top: clamp(8px, 1.6vh, 18px);
+  }
+}
+
+@media (max-width: 560px) {
+  .headline {
+    font-size: clamp(1.1rem, 7.2vw, 2.2rem);
+    gap: 2px;
+  }
+
+  .hl__gap {
+    width: 8px;
+  }
+
+  .hero-stage {
+    --road-h: clamp(88px, 15vh, 130px);
+    --card-w: clamp(122px, 40vw, 168px);
+    --card-h: clamp(82px, 11vh, 108px);
+  }
+
+  .stat:nth-child(3),
+  .stat:nth-child(4) {
+    margin-top: clamp(6px, 1.2vh, 14px);
+  }
+}
